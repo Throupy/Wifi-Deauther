@@ -1,0 +1,14 @@
+{% extends "head.html" %}
+{% block content %}
+<div class="container">
+    <div class="jumbotron">
+        <centre>
+            <h1 class="display-4">Jamming</h1>
+            <hr class="my-4">
+            <p class="lead">
+              <a class="btn btn-danger" href="{{ url_for('stop_jam') }}" role="button">Stop</a>
+            </p>
+        </centre>
+      </div>
+</div>
+{% endblock content %}
