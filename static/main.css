@@ -1,7 +1,5 @@
-div#loading {
-    display: none;
-    background: url(/static/loading.gif) no-repeat;
-    cursor: wait;
+body {
+    background-color: #313338;
 }
 
 .jumbotron {
