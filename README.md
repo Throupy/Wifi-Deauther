@@ -1,8 +1,9 @@
 # Wifi-Deauther
 
-This tool is for testing and education purposes only 
+This tool is for testing and education purposes only <br>
 <b>Do not use this tool against any Wi-Fi networks that you do not have permission to test</b>
 <hr>
+
 ### Overview
 This tool provides a web interface which shows the user all of the access points within range, and gives an option to "Jam" them. The jamming is done by sending de-authentication frames to all devices (broadcast) on the network. The result will be all devices being disconnected from the target Wi-Fi network.
 
