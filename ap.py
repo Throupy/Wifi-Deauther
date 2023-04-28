@@ -6,7 +6,11 @@ import json
 class AP:
     """Access point object"""
     def __init__(self):
-        pass
+        self.ssid = None
+        self.mac = None
+        self.channel = None
+        self.power = None
+        self.id = None
 
     def __str__(self):
         return f"{self.ssid} - {self.mac} - {self.channel} - {self.power}"
