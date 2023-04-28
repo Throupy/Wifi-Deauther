@@ -1,7 +1,10 @@
+"""Access Point Object"""
 import re
 import json
 
+
 class AP:
+    """Access point object"""
     def __init__(self):
         pass
 
@@ -9,7 +12,7 @@ class AP:
         return f"{self.ssid} - {self.mac} - {self.channel} - {self.power}"
 
     def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__, 
+        return json.dumps(self, default=lambda o: o.__dict__,
                           sort_keys=True)
 
     def clean(self):
